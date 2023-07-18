@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+key.pem
+note.txt
+test.py
+test/
+original_test_files/
