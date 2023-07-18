@@ -5,7 +5,7 @@ import accessory_funcs
 
 def load_key():
     try:
-        with open("./key.pem", "r") as key_file:
+        with open("./key.txt", "rb") as key_file:
             key = key_file.read()
         print(f"key loaded")
         return key

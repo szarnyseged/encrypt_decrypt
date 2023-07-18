@@ -1,6 +1,6 @@
 .venv/
 __pycache__/
-key.pem
+key.txt
 note.txt
 test.py
 test/
