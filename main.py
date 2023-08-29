@@ -3,14 +3,22 @@ from cryptography.fernet import Fernet
 import accessory_funcs
 
 
+def input_key():
+    """
+    ask for user to input his key
+    """
+    pass
+
+
 def load_key():
     try:
         with open("./key.txt", "rb") as key_file:
-            key = key_file.read()
+            cipher = key_file.read()
+        key = Fernet(cipher)
         print(f"key loaded")
         return key
     except:
-        print("error. maybe create a key first?")
+        raise Exception("error. maybe create a key first?")
 
 
 def encrypt_one(file_path):
@@ -23,7 +31,7 @@ def encrypt_one(file_path):
 
     with open(file_path, "rb") as one_file:
         datas = one_file.read()
-        encrypted = Fernet(key).encrypt(datas)
+        encrypted = key.encrypt(datas)
     with open(file_path, "wb") as one_file:
         one_file.write(encrypted)
     
@@ -41,7 +49,7 @@ def decrypt_one(file_path):
     
     with open(file_path, "rb") as one_file:
         encrypted = one_file.read()
-        decrypted = Fernet(key).decrypt(encrypted)
+        decrypted = key.decrypt(encrypted)
     with open(file_path, "wb") as one_file:
         one_file.write(decrypted)
 
@@ -75,7 +83,9 @@ def decrypt_all(target_dir):
 
 def choose_target():
     target = input("choose target dir to encrypt/decrypt ")
-    dir_struckture = os.walk(target)
+    dir_struckture = list(os.walk(target))
+    if len(dir_struckture) < 1:
+        raise ValueError("no files found")
     for elem in dir_struckture:
         print(elem)
     print("")
@@ -87,8 +97,11 @@ def choose_target():
 key = load_key()
 target = choose_target()
 if target != None:
-    enc_or_dec = input("encrypt or decrypt? ")
-    if enc_or_dec == "encrypt":
+    print("encrypt or decrypt? \n",
+          "1 = encrypt \n",
+          "2 = decrypt")
+    enc_or_dec = input()
+    if enc_or_dec == "1":
         encrypt_all(target)
-    elif enc_or_dec == "decrypt":
+    elif enc_or_dec == "2":
         decrypt_all(target)
