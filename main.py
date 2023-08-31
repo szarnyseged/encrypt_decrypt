@@ -28,6 +28,11 @@ def encrypt_one(file_path):
         was_hidden = True
     else:
         was_hidden = False
+    if accessory_funcs.check_for_readonly(file_path):
+        accessory_funcs.remove_readonly(file_path)
+        was_readonly = True
+    else:
+        was_readonly = False
 
     with open(file_path, "rb") as one_file:
         datas = one_file.read()
@@ -35,6 +40,8 @@ def encrypt_one(file_path):
     with open(file_path, "wb") as one_file:
         one_file.write(encrypted)
     
+    if was_readonly:
+        accessory_funcs.add_readonly(file_path)
     if was_hidden:
         accessory_funcs.add_hidden(file_path)
 
@@ -46,6 +53,11 @@ def decrypt_one(file_path):
         was_hidden = True
     else:
         was_hidden = False
+    if accessory_funcs.check_for_readonly(file_path):
+        accessory_funcs.remove_readonly(file_path)
+        was_readonly = True
+    else:
+        was_readonly = False
     
     with open(file_path, "rb") as one_file:
         encrypted = one_file.read()
@@ -53,6 +65,8 @@ def decrypt_one(file_path):
     with open(file_path, "wb") as one_file:
         one_file.write(decrypted)
 
+    if was_readonly:
+        accessory_funcs.add_readonly(file_path)
     if was_hidden:
         accessory_funcs.add_hidden(file_path)
 
@@ -95,6 +109,7 @@ def choose_target():
 
 
 key = load_key()
+print("!WARNING! DONT use it on large files. use only with files whitch fits into memory")
 target = choose_target()
 if target != None:
     print("encrypt or decrypt? \n",
